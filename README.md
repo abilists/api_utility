@@ -1,4 +1,4 @@
-# api_utility library for <a href="http://www.abilists.com" ><img src="https://github.com/minziappa/abilists_client/blob/master/src/main/webapp/static/apps/img/abilists/logo01.png" height="22" alt="Abilists"></a>
+# api_utility library for <a href="http://www.abilists.com" ><img src="https://github.com/abilists/abilists_client/blob/master/src/main/webapp/static/apps/img/abilists/logo01.png" height="22" alt="Abilists"></a>
 
 [![Build Status](https://travis-ci.org/abilists/api_utility.svg?branch=master)](https://travis-ci.org/abilists/api_utility)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/abilists/api_utility)
