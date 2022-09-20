@@ -64,6 +64,10 @@ public class ApiHttpsClient {
 
 		try {
 			is = httpsURLConn.getInputStream();
+			if(is == null) {
+				logger.error("InputStream is null.");
+				return null;
+			}
 			streamReader = new InputStreamReader(is, encoding != null ? encoding : "UTF-8");
 
 			// Debugging
