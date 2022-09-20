@@ -30,7 +30,7 @@ public class ApiHttpsClientTest {
 		try {			
 			Map<String, String> headersMap = new HashMap<String, String>();
 			headersMap.put("Content-Type", "application/json; charset=utf-8");
-			headersMap.put("Authorization", "Basic base64");
+			headersMap.put("Authorization", "Basic base64_encoding");
 
 			jSONObject = ApiHttpsClient.httpsClient("https://test.com/v1/token", headersMap, ApiHttpsClient.POST, null);
 			System.out.println(jSONObject.toString());
