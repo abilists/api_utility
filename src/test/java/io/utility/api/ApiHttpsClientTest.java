@@ -1,5 +1,8 @@
 package io.utility.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,8 +27,13 @@ public class ApiHttpsClientTest {
 	@Test
 	public void testOne() throws Exception {
 		JSONObject jSONObject = null;
-		try {
-			jSONObject = ApiHttpsClient.httpsClient("https://msp.f-secure.com/web-test/common/test.html", null, ApiHttpsClient.GET);
+		try {			
+			Map<String, String> headersMap = new HashMap<String, String>();
+			headersMap.put("Content-Type", "application/json; charset=utf-8");
+			headersMap.put("Authorization", "Basic base64");
+
+			jSONObject = ApiHttpsClient.httpsClient("https://test.com/v1/token", headersMap, ApiHttpsClient.POST, null);
+			System.out.println(jSONObject.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

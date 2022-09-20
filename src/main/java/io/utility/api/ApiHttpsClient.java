@@ -2,6 +2,7 @@ package io.utility.api;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Map;
 
@@ -22,14 +23,14 @@ public class ApiHttpsClient {
 	public static String GET = "GET";
 	public static String POST = "POST";
 
-	public static JSONObject httpsClient(String url, Map<String, String> requestHeaders, String method) throws Exception {
+	public static JSONObject httpsClient(String url, Map<String, String> requestHeaders, String method, String params) throws Exception {
 
 		URL pickUrl = new URL(url);
 		HttpsURLConnection httpsURLConn = (HttpsURLConnection)pickUrl.openConnection();
 		if(method == null || method.length() < 1) {
 			httpsURLConn.setRequestMethod(GET);
 		} else {
-			httpsURLConn.setRequestMethod(method);
+			httpsURLConn.setRequestMethod(POST);
 		}
 
 		// True to verify certificate 
@@ -53,22 +54,30 @@ public class ApiHttpsClient {
 		}
 
 		httpsURLConn.setInstanceFollowRedirects(true);
+		httpsURLConn.setDoOutput(true);
+		httpsURLConn.setDoInput(true);
+		httpsURLConn.setUseCaches(false);
 		// Get the response and parse it into another JSON object which are the
 		//'user attributes'.
 		// This example uses UTF-8 if encoding is not found in request.
-		String encoding = httpsURLConn.getContentEncoding();
+		// String encoding = httpsURLConn.getContentEncoding();
 
 		InputStream is = null;
 		InputStreamReader streamReader = null;
 		JSONObject jSONObject = null;
-
 		try {
+			if(params != null) {
+				OutputStream os = httpsURLConn.getOutputStream();
+				os.write(params.getBytes("UTF-8"));
+				os.flush();
+			}
+
 			is = httpsURLConn.getInputStream();
 			if(is == null) {
 				logger.error("InputStream is null.");
 				return null;
 			}
-			streamReader = new InputStreamReader(is, encoding != null ? encoding : "UTF-8");
+			streamReader = new InputStreamReader(is, "UTF-8");
 
 			// Debugging
 			if(logger.isDebugEnabled()) {
@@ -79,12 +88,13 @@ public class ApiHttpsClient {
 			        sb.append(theChar);
 			        data = streamReader.read();
 			    }
-			    logger.debug(sb.toString());
+			    logger.debug("reponse = " + sb.toString());
 			}
-
-			JSONParser parser = new JSONParser();
-			jSONObject = (JSONObject)parser.parse(streamReader);
-
+			// If logger is debug mode, streamReader is null.
+			if(!logger.isDebugEnabled()) {
+				JSONParser parser = new JSONParser();
+				jSONObject = (JSONObject)parser.parse(streamReader);
+			}
 			return jSONObject;
 		} catch (Exception e) {
 			logger.error("Exception error", e);
