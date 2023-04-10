@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
@@ -108,6 +109,20 @@ public class ApiHttpsClient {
 			}
 		}
 
+	}
+
+	public JSONObject getAccessToken(String contestType, String authorization, String url) throws Exception {
+		JSONObject jSONObject = null;
+		try {
+			Map<String, String> headersMap = new HashMap<String, String>();
+			headersMap.put("Content-Type", contestType);
+			headersMap.put("Authorization", authorization); // ID:PWD
+			jSONObject = ApiHttpsClient.httpsClient(url, headersMap, ApiHttpsClient.POST, null);
+        } catch (Exception e) {
+        	logger.error("getAccessToken : Exception error", e);
+        }
+
+		return jSONObject;
 	}
 
 }
