@@ -24,6 +24,122 @@ public class ApiHttpsClient {
 	public static String GET = "GET";
 	public static String POST = "POST";
 
+	public static String httpsClientTxt(String url, Map<String, String> requestHeaders, String method, String params) throws Exception {
+
+		HttpsURLConnection httpsURLConn = httpsClientConnection(url, requestHeaders, method, params);
+
+		InputStream is = null;
+		InputStreamReader streamReader = null;
+		try {
+			if(params != null) {
+				OutputStream os = httpsURLConn.getOutputStream();
+				os.write(params.getBytes("UTF-8"));
+				os.flush();
+			}
+
+			is = httpsURLConn.getInputStream();
+			if(is == null) {
+				logger.error("InputStream is null.");
+				return null;
+			}
+			streamReader = new InputStreamReader(is, "UTF-8");
+
+		    int data = streamReader.read();
+		    StringBuffer sb = new StringBuffer();
+		    while(data != -1) {
+		        char theChar = (char) data;
+		        sb.append(theChar);
+		        data = streamReader.read();
+		    }
+
+			return sb.toString();
+		} catch (Exception e) {
+			logger.error("Exception error", e);
+			throw e;
+		} finally {
+			if(is != null) {
+				is.close();
+			}
+			if(streamReader != null) {
+				streamReader.close();
+			}
+		}
+	}
+	
+	public static HttpsURLConnection httpsClientConnection(String url, Map<String, String> requestHeaders, String method, String params) throws Exception {
+
+		URL pickUrl = new URL(url);
+		HttpsURLConnection httpsURLConn = (HttpsURLConnection)pickUrl.openConnection();
+		if(method == null || method.length() < 1) {
+			httpsURLConn.setRequestMethod(GET);
+		} else {
+			httpsURLConn.setRequestMethod(POST);
+		}
+
+		// True to verify certificate 
+		final HostnameVerifier hv=new HostnameVerifier() {
+			@Override
+			public boolean verify(String arg0, SSLSession arg1) {
+				// TODO Auto-generated method stub
+				return true;
+			}
+		};
+		httpsURLConn.setHostnameVerifier(hv);
+
+		// Create an SSLContext that uses our TrustManager
+		SSLContext sslContext = SSLContext.getInstance("TLS");
+		sslContext.init(null, null, null);
+		httpsURLConn.setSSLSocketFactory(sslContext.getSocketFactory());
+		if(requestHeaders != null) {
+			for (Map.Entry<String, String> entry : requestHeaders.entrySet()) {
+				httpsURLConn.setRequestProperty(entry.getKey(), entry.getValue());
+			}
+		}
+
+		httpsURLConn.setInstanceFollowRedirects(true);
+		httpsURLConn.setDoOutput(true);
+		httpsURLConn.setDoInput(true);
+		httpsURLConn.setUseCaches(false);
+
+		return httpsURLConn;
+	}
+
+	public static JSONObject httpsClientJsonObj(HttpsURLConnection httpsURLConn, String params) throws Exception {
+
+		InputStream is = null;
+		InputStreamReader streamReader = null;
+		JSONObject jSONObject = null;
+		try {
+			if(params != null) {
+				OutputStream os = httpsURLConn.getOutputStream();
+				os.write(params.getBytes("UTF-8"));
+				os.flush();
+			}
+
+			is = httpsURLConn.getInputStream();
+			if(is == null) {
+				logger.error("InputStream is null.");
+				return null;
+			}
+			streamReader = new InputStreamReader(is, "UTF-8");
+
+			JSONParser parser = new JSONParser();
+			jSONObject = (JSONObject)parser.parse(streamReader);
+
+			return jSONObject;
+		} catch (Exception e) {
+			logger.error("Exception error", e);
+			throw e;
+		} finally {
+			if(is != null) {
+				is.close();
+			}
+			if(streamReader != null) {
+				streamReader.close();
+			}
+		}
+	}
+
 	public static JSONObject httpsClient(String url, Map<String, String> requestHeaders, String method, String params) throws Exception {
 
 		URL pickUrl = new URL(url);
