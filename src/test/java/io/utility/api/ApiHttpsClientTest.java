@@ -1,7 +1,9 @@
 package io.utility.api;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Base64.Encoder;
 
 import org.json.simple.JSONObject;
 import org.junit.After;
@@ -27,7 +29,6 @@ public class ApiHttpsClientTest {
 	@Test
 	public void testOne() throws Exception {
 
-		String str = null;
 		JSONObject jSONObject = null;
 		try {
 			Map<String, String> headersMap = new HashMap<String, String>();
@@ -37,12 +38,23 @@ public class ApiHttpsClientTest {
 			String params = "{\"test\":\"value\"}"; 
 			headersMap.put("Content-Length", Integer.toString(params.length()));
 
-			// str = ApiHttpsClient.httpsClientTxt("https://test.co.kr/api", headersMap, ApiHttpsClient.POST, params);
-
-			jSONObject = ApiHttpsClient.httpsClient("https://test.co.kr/api", headersMap, ApiHttpsClient.POST, params);
+			jSONObject = ApiHttpsClient.httpsClient("https://localhost:8443/api/oauth", headersMap, ApiHttpsClient.POST, params);
 			
 			System.out.println("str = " + jSONObject.toJSONString());
+        } catch (Exception e) {
+        	System.out.println("getAccessToken : Exception error " + e);
+        }
 
+	}
+
+	// @Test
+	public void testTwo() throws Exception {
+
+		JSONObject jSONObject = null;
+		try {
+			String strTest = "97f3c717da19b4697ee9884e67aabce6:56b2d2400f5410f64e37c14d11150e3d75e3b9c7ccc76fb8cf19d912990f8994";
+			String encoded = Base64.getEncoder().encodeToString(strTest.getBytes());
+			System.out.println("encoded = " + encoded);
         } catch (Exception e) {
         	System.out.println("getAccessToken : Exception error " + e);
         }
