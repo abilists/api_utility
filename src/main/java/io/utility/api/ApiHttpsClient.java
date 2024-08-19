@@ -26,7 +26,7 @@ public class ApiHttpsClient {
 
 	public static String httpsClientTxt(String url, Map<String, String> requestHeaders, String method, String params) throws Exception {
 
-		HttpsURLConnection httpsURLConn = httpsClientConnection(url, requestHeaders, method, params);
+		HttpsURLConnection httpsURLConn = httpsClientConnection(url, requestHeaders, method);
 
 		InputStream is = null;
 		InputStreamReader streamReader = null;
@@ -66,7 +66,7 @@ public class ApiHttpsClient {
 		}
 	}
 	
-	public static HttpsURLConnection httpsClientConnection(String url, Map<String, String> requestHeaders, String method, String params) throws Exception {
+	public static HttpsURLConnection httpsClientConnection(String url, Map<String, String> requestHeaders, String method) throws Exception {
 
 		URL pickUrl = new URL(url);
 		HttpsURLConnection httpsURLConn = (HttpsURLConnection)pickUrl.openConnection();

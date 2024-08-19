@@ -3,7 +3,6 @@ package io.utility.api;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Base64.Encoder;
 
 import org.json.simple.JSONObject;
 import org.junit.After;
@@ -26,7 +25,7 @@ public class ApiHttpsClientTest {
 		System.out.println("Before");
 	}
 
-	@Test
+	// @Test
 	public void testOne() throws Exception {
 
 		JSONObject jSONObject = null;
@@ -47,12 +46,26 @@ public class ApiHttpsClientTest {
 
 	}
 
-	// @Test
+	@Test
 	public void testTwo() throws Exception {
 
 		JSONObject jSONObject = null;
 		try {
-			String strTest = "97f3c717da19b4697ee9884e67aabce6:56b2d2400f5410f64e37c14d11150e3d75e3b9c7ccc76fb8cf19d912990f8994";
+			String strTest = "24b320f630b480985fb6793da9f50d34:c8e9aaa219f36426afa828a6eac88876";
+			String encoded = Base64.getEncoder().encodeToString(strTest.getBytes());
+			System.out.println("encoded = " + encoded);
+        } catch (Exception e) {
+        	System.out.println("getAccessToken : Exception error " + e);
+        }
+
+	}
+
+	// @Test
+	public void testThree() throws Exception {
+
+		JSONObject jSONObject = null;
+		try {
+			String strTest = "97f3c717da19b4697ee9884e67aabce6:d11dc0e97d1fe3bceeea041a1dd10859";
 			String encoded = Base64.getEncoder().encodeToString(strTest.getBytes());
 			System.out.println("encoded = " + encoded);
         } catch (Exception e) {
